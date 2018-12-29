@@ -1,0 +1,12 @@
+*.pyc
+.env
+*.DS_Store
+__pycache__/
+node_modules/
+bower_components/
+.Python
+bin/
+include/
+lib/
+pip-selfcheck.json
+.vscode/
