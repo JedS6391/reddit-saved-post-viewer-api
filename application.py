@@ -5,12 +5,25 @@
     This module implements the central API application object.
 """
 
-import os
-
 from flask import Flask
+from flask.json import JSONEncoder
 from flask_session import Session
 
+from api.shared.models import Post
+
 session = Session()
+
+class PostEncoder(JSONEncoder):
+    """ A custom JSONEncoder implementation that can handle Post objects. """
+
+    def default(self, o):
+        if isinstance(o, Post):
+            return {
+                'id': o.id,
+                'title': o.title,
+                'permalink': o.permalink
+            }
+        return super(PostEncoder, self).default(o)
 
 class Application:
     """ The main application object for the API project. """
@@ -34,6 +47,9 @@ class Application:
         self.debug = self.app.config['DEBUG']
 
         session.init_app(self.app)
+
+        # Custom JSON encoder that can handle reddit post instances.
+        self.app.json_encoder = PostEncoder
 
     def start_app(self):
         self.app.run(debug=self.debug)
