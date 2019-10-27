@@ -57,16 +57,24 @@ class RedditClient:
             # This is not expected.
             raise RedditClientException(e)
 
+    @property
+    def authenticated_user(self):
+        """ Returns the currently authenticated user. """
+        self._authenticate()
+
+        return self.reddit.user.me()
+
     def saved_posts(self, limit, subreddit=None):
         """ Returns a generator that can be used to enumerate all of a users saved posts. """
 
         # Attempt to authenticate first. Any exceptions must be handled by the caller.
         self._authenticate()
+        user = self.reddit.user.me()
 
         parameters = {}
 
-        # Filter by subreddit if requested.
-        if subreddit:
+        # Filter by subreddit if requested and possible.
+        if subreddit and user.has_gold_subscription:
             parameters['sr'] = subreddit
 
         return self.reddit.user.me().saved(limit=limit, params=parameters)

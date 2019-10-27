@@ -18,16 +18,16 @@ from api.client.reddit import (
 )
 from api.shared.models import Post
 
+logging.basicConfig(level=logging.DEBUG) 
+
 class Worker:
     """ The base class for all workers. Implementations must override the process method. """
 
-    def __init__(self):
+    def __init__(self, token):
         self.id = uuid.uuid4()
-
-        logging.basicConfig()
+        self.token = token
 
         self.logger = logging.getLogger(__name__)
-        self.logger.setLevel(logging.DEBUG)
 
     def process(self):
         """ This method performs the actual work that this worker encapsulates. """
@@ -37,7 +37,7 @@ class SavedPostAggregator(Worker):
     """ A worker that can process a set of saved posts from the Reddit API. """
 
     def __init__(self, reddit_client, limit, subreddit):
-        super().__init__()
+        super().__init__(reddit_client.token)
 
         self.reddit_client = reddit_client
         self.limit = limit
@@ -45,7 +45,7 @@ class SavedPostAggregator(Worker):
         self.tag = '[worker-{0}]'.format(self.id)
 
     def process(self):
-        self.logger.info(
+        self.logger.debug(
             '%s Processing %s saved posts (subreddit=%s)',
             self.tag,
             self.limit,
@@ -66,11 +66,12 @@ class SavedPostAggregator(Worker):
                         Post(post.id, post.title, post.permalink)
                     )
                 else:
+                    # This post is a comment
                     links.append(
                         Post(post.id, post.submission.title, post.permalink)
                     )
 
-            self.logger.info('%s Processing completed', self.tag)
+            self.logger.debug('%s Processing completed', self.tag)
 
             return links
         except RedditClientAuthenticationException as auth_exception:

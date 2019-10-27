@@ -18,13 +18,19 @@ class QueueService:
         self.queue = Queue('service', connection=self.connection)
         self.timeout = timeout
 
-    def enqueue(self, worker):
+    def enqueue(self, worker, meta=None):
         """ Adds the given worker to the job queue and returns the associated job. """
 
         if not isinstance(worker, Worker):
             raise ValueError('Cannot enqueue instances that are not subclasses of Worker.')
 
-        return self.queue.enqueue(worker.process, timeout=self.timeout)
+        job = self.queue.enqueue(worker.process, ttl=self.timeout)
+
+        # Create an association between the job and the worker token
+        job.meta['token'] = worker.token
+        job.save_meta()
+
+        return job
 
     def status(self, job_id):
         """ Provides status information for the job with the given ID. """
@@ -32,6 +38,6 @@ class QueueService:
         job = self.queue.fetch_job(job_id)
 
         if not job:
-            return dict(status='Invalid job ID')
+            return None
 
-        return dict(state=job.get_status(), result=job.result)
+        return dict(state=job.get_status(), result=job.result, meta=job.meta)
