@@ -44,7 +44,7 @@ def saved_posts():
         except ValueError:
             return jsonify({
                 'error': 'limit must be an integer.'
-            })   
+            })
 
     reddit_client = RedditClient(
         client_id=app.config['CLIENT_ID'],
@@ -54,7 +54,7 @@ def saved_posts():
 
     authenticated_user = reddit_client.authenticated_user
 
-    if not authenticated_user.has_gold_subscription and subreddit is not None:
+    if not authenticated_user.me().has_gold_subscription and subreddit is not None:
         return jsonify({
             'error': 'subreddit filtering is only supported for gold users.'
         })
@@ -65,7 +65,7 @@ def saved_posts():
         job = queue_service.enqueue(worker)
 
         return jsonify({
-            'job_id': job.id
+            'jobId': job.id
         })
     except RedditClientAuthenticationException as auth_exception:
         app.logger.error('Failed to authenticate with reddit API')
@@ -87,10 +87,11 @@ def user():
     )
 
     authenticated_user = reddit_client.authenticated_user
+    user_details = authenticated_user.me()
 
     return jsonify({
-        'id': authenticated_user.id,
-        'name': authenticated_user.name,
-        'has_gold_subscription': authenticated_user.has_gold_subscription,
-        'created_utc': int(authenticated_user.created_utc)
+        'id': user_details.id,
+        'name': user_details.name,
+        'hasGoldSubscription': user_details.has_gold_subscription,
+        'createdUtc': int(user_details.created_utc)
     })

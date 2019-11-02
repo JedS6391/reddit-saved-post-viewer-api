@@ -37,9 +37,6 @@ def job_status(id):
     if not 'token' in meta or meta['token'] != token:
         return jsonify({
             'error': 'invalid token supplied.'
-        }) 
+        })
 
-
-    return jsonify({
-        'status': status
-    })
+    return jsonify(status)

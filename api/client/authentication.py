@@ -16,7 +16,8 @@ from api.shared.constants import USER_AGENT
 REDDIT_AUTH_SCOPES = [
     'identity',
     'history',
-    'read'
+    'read',
+    'mysubreddits'
 ]
 
 class RedditOAuthValidateResponse:

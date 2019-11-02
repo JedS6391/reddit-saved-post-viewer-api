@@ -61,15 +61,14 @@ class SavedPostAggregator(Worker):
 
             # By default, posts will be sorted in the order they were saved in.
             for post in saved_post_generator:
-                if isinstance(post, Submission):
-                    links.append(
-                        Post(post.id, post.title, post.permalink)
-                    )
-                else:
-                    # This post is a comment
-                    links.append(
-                        Post(post.id, post.submission.title, post.permalink)
-                    )
+                post_model = Post(post.id, post.title, post.permalink, post.subreddit.display_name) \
+                             if isinstance(post, Submission) \
+                             else \
+                             Post(post.id, post.submission.title, post.permalink, post.subreddit.display_name)
+
+                self.logger.debug('Processed post: %s', post_model)
+
+                links.append(post_model)
 
             self.logger.debug('%s Processing completed', self.tag)
 

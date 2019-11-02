@@ -6,24 +6,13 @@
 """
 
 from flask import Flask
-from flask.json import JSONEncoder
 from flask_session import Session
+from flask_cors import CORS
 
-from api.shared.models import Post
+from api.shared.encoders import PostEncoder
 
 session = Session()
-
-class PostEncoder(JSONEncoder):
-    """ A custom JSONEncoder implementation that can handle Post objects. """
-
-    def default(self, o):
-        if isinstance(o, Post):
-            return {
-                'id': o.id,
-                'title': o.title,
-                'permalink': o.permalink
-            }
-        return super(PostEncoder, self).default(o)
+cors = CORS(supports_credentials=True)
 
 class Application:
     """ The main application object for the API project. """
@@ -47,6 +36,7 @@ class Application:
         self.debug = self.app.config['DEBUG']
 
         session.init_app(self.app)
+        cors.init_app(self.app)
 
         # Custom JSON encoder that can handle reddit post instances.
         self.app.json_encoder = PostEncoder

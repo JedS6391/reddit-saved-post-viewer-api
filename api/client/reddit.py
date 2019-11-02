@@ -62,7 +62,7 @@ class RedditClient:
         """ Returns the currently authenticated user. """
         self._authenticate()
 
-        return self.reddit.user.me()
+        return self.reddit.user
 
     def saved_posts(self, limit, subreddit=None):
         """ Returns a generator that can be used to enumerate all of a users saved posts. """
@@ -77,4 +77,4 @@ class RedditClient:
         if subreddit and user.has_gold_subscription:
             parameters['sr'] = subreddit
 
-        return self.reddit.user.me().saved(limit=limit, params=parameters)
+        return user.saved(limit=limit, params=parameters)

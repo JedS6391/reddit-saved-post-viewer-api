@@ -40,4 +40,6 @@ class QueueService:
         if not job:
             return None
 
+        print(job.result)
+
         return dict(state=job.get_status(), result=job.result, meta=job.meta)

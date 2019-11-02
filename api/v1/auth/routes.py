@@ -28,7 +28,7 @@ def generate_url():
     )
 
     return jsonify({
-        'oauth_url': oauth_client.authorisation_url
+        'url': oauth_client.authorisation_url
     }), 200
 
 @auth.route('/validate/', methods=['GET'])
