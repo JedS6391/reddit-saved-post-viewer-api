@@ -31,7 +31,7 @@ pylint==2.2.2
 python-http-client==2.1.1
 pytz==2016.10
 redis==3.0.1
-requests==2.12.5
+requests==2.20.0
 rq==0.13.0
 sendgrid==3.0.6
 six==1.10.0
