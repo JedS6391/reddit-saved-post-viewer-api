@@ -18,7 +18,7 @@ class QueueService:
         self.queue = Queue('service', connection=self.connection)
         self.timeout = timeout
 
-    def enqueue(self, worker, meta=None):
+    def enqueue(self, worker):
         """ Adds the given worker to the job queue and returns the associated job. """
 
         if not isinstance(worker, Worker):
@@ -39,7 +39,5 @@ class QueueService:
 
         if not job:
             return None
-
-        print(job.result)
 
         return dict(state=job.get_status(), result=job.result, meta=job.meta)

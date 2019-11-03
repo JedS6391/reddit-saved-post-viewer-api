@@ -18,8 +18,6 @@ from api.client.reddit import (
 )
 from api.shared.models import Post
 
-logging.basicConfig(level=logging.DEBUG) 
-
 class Worker:
     """ The base class for all workers. Implementations must override the process method. """
 

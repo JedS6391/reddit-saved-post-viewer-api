@@ -14,10 +14,12 @@ from api.shared.constants import USER_AGENT
 
 # We need history scope to view saved posts.
 REDDIT_AUTH_SCOPES = [
+    # For user information
     'identity',
+    # For saved posts
     'history',
-    'read',
-    'mysubreddits'
+    # For general un-authenticated reddit access
+    'read'
 ]
 
 class RedditOAuthValidateResponse:
@@ -28,6 +30,8 @@ class RedditOAuthValidateResponse:
         self.token = token
         self.error = error
 
+# TODO: Would be good to make this a bit smarter so we can return our own token along with
+# the refresh token and allow clients to handle the refresh process.
 class RedditOAuthClient:
     """ Handles the OAuth flow against the reddit API. """
 

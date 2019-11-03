@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+    encoders
+    ~~~~~~~~~
+    This module contains custom encoders for the application.
+"""
+
 from flask.json import JSONEncoder
 
 from api.shared.models import Post

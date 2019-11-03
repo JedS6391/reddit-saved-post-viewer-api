@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+    main
+    ~~~~~~~~~
+    Provides access to the main application instance.
+"""
+
 import os
 
 from application import Application
@@ -9,7 +16,4 @@ from api.v1.reddit.routes import reddit as reddit_v1
 config = os.environ['APP_SETTINGS']
 blueprints = [api_v1, auth_v1, jobs_v1, reddit_v1]
 
-app = Application(blueprints, config, debug=True)
-
-if __name__ == '__main__':
-    print(app.app.url_map)
+app = Application(blueprints, config)

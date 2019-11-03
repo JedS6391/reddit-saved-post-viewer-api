@@ -6,11 +6,15 @@
 """
 
 import os
+import logging
 
 class Config:
+    """ The base configuration. """
+
+    # Controls whether the application will run in debug mode.
     DEBUG = False
 
-    # Secret key used across the Flask application. 
+    # Secret key used across the Flask application.
     SECRET_KEY = os.environ['SECRET_KEY']
 
     # Reddit API client configuration.
@@ -21,9 +25,16 @@ class Config:
     # flask-session backend configuration
     SESSION_TYPE = os.environ['SESSION_TYPE']
 
+    # Application logging level (default is DEBUG level).
+    LOGGING_LEVEL = logging.DEBUG
+
 class ProductionConfig(Config):
+    """ Production environment configuration. """
     DEBUG = False
+    LOGGING_LEVEL = logging.ERROR
 
 class DevelopmentConfig(Config):
+    """ Development environment configuration. """
     DEVELOPMENT = True
     DEBUG = True
+    LOGGING_LEVEL = logging.DEBUG
